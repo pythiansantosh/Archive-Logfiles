@@ -44,7 +44,7 @@ Write-Output "Log files not found older than 8 days" | Out-File $verboselog -App
 
 #Clear Archive
 #Find files in archive older than a month and delete them
-$logfilestodelete=Get-ChildItem -Path $archivefolder | Where-Object lastwritetime -LT $((Get-Date).AddDays(-30)) #| Remove-Item -Force -Confirm:$false
+$logfilestodelete = Get-ChildItem -Path $archivefolder | Where-Object lastwritetime -LT $((Get-Date).AddDays(-30))
 
 #Check and take action if log files are found
 If($logfilestodelete) {

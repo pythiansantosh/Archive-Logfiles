@@ -1,4 +1,4 @@
-﻿#Script to move old logs to archive folder and remove files older than one month
+#Script to move old logs to archive folder and remove files older than one month
 
 
 #Defs (Note: Change to correct paths when using in Production)
@@ -13,8 +13,12 @@ $logfolder = "C:\Data\Celerion\Cleanup"
 
 $archivefolder = "C:\Data\Celerion\Cleanup\Archive"
 
+$zipfile = "C:\Data\Celerion\Cleanup\Archive\$verboselogdate"
+
+$archive = ("*archive*","*Archive*","*ARCHIVE*");
+
 #Get Logs Older than a week
-$logfilestomove = Get-ChildItem -Path $logfolder | Where-Object lastwritetime -LT $((Get-Date).AddDays(-8)) 
+$logfilestomove = Get-ChildItem -Path $logfolder -Exclude $archive | Where-Object lastwritetime -LT $((Get-Date).AddDays(-8)) 
 
 #Check and take action if log files are found
 If($logfilestomove) {
@@ -25,8 +29,9 @@ $logfilestomove | Out-File $verboselog -Append
     Foreach ($filetomove in $logfilestomove) {
         
         Try {
-            Move-Item -Path $filetomove.FullName -Destination $archivefolder -Force -Confirm:$false
-            Write-Output "Moved $($filetomove.FullName) to Archive Folder" | Out-File $verboselog -Append
+            $filetomove | Compress-Archive -DestinationPath $zipfile -Update
+            Remove-Item -Path $filetomove.FullName -Force -Confirm:$false
+            Write-Output "Archived $($filetomove.FullName) to $zipfile Archive" | Out-File $verboselog -Append
         }
         Catch {
         

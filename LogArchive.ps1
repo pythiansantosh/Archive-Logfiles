@@ -13,7 +13,9 @@ $logfolder = "C:\Data\Celerion\Cleanup"
 
 $archivefolder = "C:\Data\Celerion\Cleanup\Archive"
 
-$zipfile = "C:\Data\Celerion\Cleanup\Archive\$verboselogdate"
+$zipFileName = "archive-$verboselogdate.zip"
+
+$zipfile = Join-Path -Path $archivefolder -ChildPath $zipFileName
 
 $archive = ("*archive*","*Archive*","*ARCHIVE*");
 
